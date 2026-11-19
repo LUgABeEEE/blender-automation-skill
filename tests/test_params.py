@@ -5,7 +5,7 @@ from __future__ import annotations
 import random
 import unittest
 
-from blender_loop.params import ParamError, ParamSpec, SearchSpace
+from model_loop.params import ParamError, ParamSpec, SearchSpace
 
 
 class ParamSpecTests(unittest.TestCase):

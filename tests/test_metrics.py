@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw
 
-from blender_loop.metrics import (
+from model_loop.metrics import (
     MaskError,
     bbox,
     centroid,
@@ -73,7 +73,7 @@ class MaskMetricTests(unittest.TestCase):
 
 class LoadMaskTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.tmp = Path(tempfile.mkdtemp(prefix="blender-loop-metrics-"))
+        self.tmp = Path(tempfile.mkdtemp(prefix="model-loop-metrics-"))
 
     def _write_rgba(self, name: str, box: tuple[int, int, int, int]) -> Path:
         image = Image.new("RGBA", (20, 20), (0, 0, 0, 0))

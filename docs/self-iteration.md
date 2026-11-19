@@ -120,7 +120,7 @@ def evaluate(params, workdir) -> Evaluation:
 ## 9. 报告与复现
 
 ```bash
-blender-loop demo --blender /path/to/blender --out out/demo
+model-loop demo --blender /path/to/blender --out out/demo
 # -> out/demo/history.json（完整历史）
 # -> out/demo/report.html（曲线 + 表格 + 目标/最佳对比图）
 ```
@@ -130,7 +130,7 @@ blender-loop demo --blender /path/to/blender --out out/demo
 
 ## 10. 一个真实的最小闭环
 
-`blender-loop demo` 的流程（不需要任何模型资产）：
+`model-loop demo` 的流程（不需要任何模型资产）：
 
 1. 用隐藏参数 `width=1.42, height=0.74, offset_x=0.22` 渲染目标剪影；
 2. 从默认参数 `(1.0, 1.0, 0.0)` 出发，坐标下降；
