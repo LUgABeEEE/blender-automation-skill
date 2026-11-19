@@ -3,61 +3,73 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>model-loop · 无头 Blender 建模 · 机器调优 · 自迭代闭环</title>
+<title>blender-automation-skill · 无头 Blender 建模 · 机器调优 · 自迭代闭环</title>
+<meta name="description" content="AI Skill + MCP toolkit for agent-driven headless Blender modelling: parameter search, quantified scoring and self-iteration loops.">
 <style>
   :root{
     color-scheme: light dark;
     --bg:#f7f9fc; --panel:#ffffff; --ink:#1b2230; --muted:#5c687c;
     --line:#e4e9f2; --accent:#2f6df6; --accent-soft:#e8efff;
-    --good:#11875a; --code-bg:#f1f4fa;
+    --good:#11875a; --code-bg:#f1f4fa; --shadow:0 1px 2px rgba(16,24,40,.04);
   }
   @media (prefers-color-scheme: dark){
     :root{
       --bg:#10141b; --panel:#171d26; --ink:#e7edf7; --muted:#9daabd;
       --line:#27303d; --accent:#7aa2ff; --accent-soft:#1c2740;
-      --good:#3ed598; --code-bg:#121821;
+      --good:#3ed598; --code-bg:#121821; --shadow:none;
     }
   }
   *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
   body{
     margin:0; background:var(--bg); color:var(--ink);
     font:16px/1.7 -apple-system,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
   }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
   .wrap{max-width:1040px;margin:0 auto;padding:56px 24px 80px}
   header h1{font-size:34px;line-height:1.2;margin:0 0 10px;letter-spacing:-.01em}
-  header p.lede{font-size:18px;color:var(--muted);margin:0 0 18px;max-width:52ch}
-  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 8px}
+  header p.lede{font-size:18px;color:var(--muted);margin:0 0 18px;max-width:56ch}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
   .chip{font-size:13px;padding:4px 10px;border-radius:999px;background:var(--panel);
     border:1px solid var(--line);color:var(--muted)}
   .chip.on{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+  .topnav{display:flex;gap:18px;flex-wrap:wrap;font-size:14.5px;border-top:1px solid var(--line);padding-top:16px}
   section{margin-top:52px}
   h2{font-size:21px;margin:0 0 6px}
   h2 + p.sub{color:var(--muted);margin:0 0 18px;font-size:14.5px}
+  h3{font-size:16px;margin:0 0 6px}
   .grid{display:grid;gap:14px}
   .grid.three{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
-  .card h3{font-size:16px;margin:0 0 6px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow)}
   .card p{margin:0;color:var(--muted);font-size:14.5px}
-  .card a{color:var(--accent);text-decoration:none;font-size:14px}
-  .card a:hover{text-decoration:underline}
+  .card p + p{margin-top:10px}
+  .card a{font-size:14px}
+  figure{margin:0}
+  figure.shot{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px;box-shadow:var(--shadow)}
+  figure.shot img{display:block;width:100%;height:auto;border-radius:10px}
+  figcaption{color:var(--muted);font-size:13.5px;padding:10px 6px 4px}
+  figcaption strong{color:var(--ink);font-weight:600}
   .diagram{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px}
   .diagram svg{width:100%;height:auto;display:block}
   pre{background:var(--code-bg);border:1px solid var(--line);border-radius:12px;
-    padding:16px 18px;overflow:auto;font-size:13.5px;line-height:1.6}
+    padding:16px 18px;overflow:auto;font-size:13.5px;line-height:1.6;margin:0 0 14px}
   code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  p code,td code,li code{background:var(--code-bg);border-radius:5px;padding:1px 5px;font-size:.92em}
   table{width:100%;border-collapse:collapse;background:var(--panel);
     border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:14.5px}
-  th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left}
+  th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
   th{color:var(--muted);font-size:12px;letter-spacing:.05em;text-transform:uppercase}
   tr:last-child td{border-bottom:0}
-  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
   .two{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
-  .links a{display:block;color:var(--accent);text-decoration:none;padding:10px 0;
-    border-bottom:1px dashed var(--line);font-size:15px}
+  .links a{display:block;padding:10px 0;border-bottom:1px dashed var(--line);font-size:15px}
   .links a:last-child{border-bottom:0}
   .links a span{color:var(--muted);font-size:13.5px;margin-left:8px}
   footer{margin-top:64px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:18px}
   .big{font-size:28px;font-weight:650;font-variant-numeric:tabular-nums}
+  .note{color:var(--muted);font-size:13.5px;margin:10px 0 0}
+  @media (max-width:640px){ header h1{font-size:27px} .wrap{padding:36px 18px 60px} }
 </style>
 </head>
 <body>
@@ -67,12 +79,75 @@
       <span class="chip on">MIT</span>
       <span class="chip">Python 3.10+</span>
       <span class="chip">Blender 3.6+</span>
+      <span class="chip">MCP-ready</span>
       <span class="chip">no model assets</span>
     </div>
-    <h1>model-loop</h1>
-    <p class="lede">把「用 Blender 反复调模型」变成可复现的工程流程：
-      参数空间 → 无头渲染 → 量化打分 → 搜索 → 报告。</p>
+    <h1>blender-automation-skill</h1>
+    <p class="lede">AI Skill + MCP toolkit for agent-driven headless Blender modelling —
+      把「用 Blender 反复调模型」变成可复现的工程流程：参数空间 → 无头渲染 → 量化打分 → 搜索 → 报告。</p>
+    <nav class="topnav">
+      <a href="https://github.com/LUgABeEEE/blender-automation-skill">GitHub 仓库</a>
+      <a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/README.md">README</a>
+      <a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/SKILL.md">SKILL.md（给 agent）</a>
+      <a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/examples/mcp.json">examples/mcp.json</a>
+    </nav>
   </header>
+
+  <section>
+    <h2>真实输出</h2>
+    <p class="sub">下面全部由 <code>blender-automation-skill demo</code> 在本机用 Blender 4.2.9 LTS 现场渲染，仓库里不存任何预置渲染。</p>
+    <figure class="shot">
+      <img src="assets/demo-compare.png" width="1688" height="888"
+           alt="剪影自迭代实测：目标剪影、最佳候选渲染与像素级差异（绿=重合，红=只属于目标，蓝=只属于候选）">
+      <figcaption><strong>剪影自迭代实测</strong> · 目标参数 <code>(1.42, 0.74, 0.22)</code> 只用于渲染参考图，
+        搜索从 <code>(1.0, 1.0, 0.0)</code> 出发，20 次评估收敛到 <code>(1.45, 0.76, 0.19)</code>，
+        掩膜 <strong>IoU 0.9378</strong>（512²、Cycles 1 spp、全程 9.1 s）。</figcaption>
+    </figure>
+    <p class="note">单帧原图：<a href="assets/demo-target.png">目标剪影 512²</a> ·
+      <a href="assets/demo-best.png">最佳渲染 512²</a> ·
+      报告：<code>out/demo/report.html</code>（迭代曲线 + 每次评估的表格 + 目标/最佳对比，单文件、无外链）。</p>
+  </section>
+
+  <section>
+    <h2>在任何 agent 里调用（MCP）</h2>
+    <p class="sub"><code>blender-automation-skill-mcp</code> 走 stdio 讲 MCP，工具只返回 JSON，缺 Blender 或参数非法时返回 <code>{"ok": false, "error": ...}</code> 而不是抛异常。
+      每个客户端的填法、参数表与报错解读见 <a href="mcp.md">docs/mcp.md</a>。</p>
+<pre><code>pip install "blender-automation-skill[mcp]"
+
+# Claude Code
+claude mcp add blender -- blender-automation-skill-mcp
+
+# Codex
+codex mcp add blender -- blender-automation-skill-mcp
+
+# 任意 MCP 客户端（Cursor / DSH / 自研 agent）
+{
+  "mcpServers": {
+    "blender": { "command": "blender-automation-skill-mcp", "args": [] }
+  }
+}</code></pre>
+    <div class="two">
+      <table>
+        <thead><tr><th>工具</th><th>作用</th></tr></thead>
+        <tbody>
+          <tr><td><code>blender_capabilities</code></td><td>探测 Blender 路径/版本、本机 CPU 与内存</td></tr>
+          <tr><td><code>blender_bench</code></td><td>冷启动、渲染、布尔耗时与峰值 RSS</td></tr>
+          <tr><td><code>blender_run_script</code></td><td>用一个 JSON 参数跑一次 Blender 脚本，回传产物</td></tr>
+          <tr><td><code>blender_optimize</code></td><td>对目标剪影做坐标下降搜索（最大化掩膜 IoU）</td></tr>
+          <tr><td><code>blender_demo</code></td><td>内置剪影自迭代示例，零资产即可跑通</td></tr>
+          <tr><td><code>blender_report</code></td><td>history.json → 单文件 HTML 报告</td></tr>
+        </tbody>
+      </table>
+      <div class="card">
+        <h3>脚本契约</h3>
+        <p><code>blender_run_script</code> / <code>blender_optimize</code> 统一按这个形式调用 Blender：</p>
+<pre><code>blender --background --python &lt;script&gt; -- \
+  &lt;params-json&gt; &lt;png-out&gt; [resolution]</code></pre>
+        <p>脚本自己读 <code>sys.argv</code> 中 <code>--</code> 之后的部分、渲染一张剪影、退出码 0。
+          完整可运行示例见 <a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/src/model_loop/demo.py">demo.py</a>。</p>
+      </div>
+    </div>
+  </section>
 
   <section>
     <h2>三个支柱</h2>
@@ -81,17 +156,17 @@
       <div class="card">
         <h3>① 建模工作流</h3>
         <p>场景即代码：<code>--factory-startup</code> 从空场景重建，单位/坐标/导出全部显式约定。</p>
-        <p style="margin-top:10px"><a href="modeling-workflow.md">modeling-workflow.md →</a></p>
+        <p><a href="modeling-workflow.md">modeling-workflow.md →</a></p>
       </div>
       <div class="card">
         <h3>② 机器调优</h3>
         <p>先量后调：冷启动/渲染/布尔基准，地址空间上限、flock 串行、单次超时、峰值 RSS。</p>
-        <p style="margin-top:10px"><a href="machine-tuning.md">machine-tuning.md →</a></p>
+        <p><a href="machine-tuning.md">machine-tuning.md →</a></p>
       </div>
       <div class="card">
         <h3>③ 自迭代闭环</h3>
         <p>评估器契约 + 内容哈希缓存 + 预算 + 坐标下降，产出可离线查看的单文件 HTML 报告。</p>
-        <p style="margin-top:10px"><a href="self-iteration.md">self-iteration.md →</a></p>
+        <p><a href="self-iteration.md">self-iteration.md →</a></p>
       </div>
     </div>
   </section>
@@ -141,24 +216,27 @@
 
   <section>
     <h2>三分钟跑起来</h2>
-    <p class="sub">没有 Blender 也能跑测试；跑 demo/bench 才需要真实二进制。</p>
+    <p class="sub">没有 Blender 也能跑测试；跑 demo/bench 才需要真实二进制。<code>model-loop</code> 命令仍是可用别名。</p>
     <div class="two">
       <div>
 <pre><code>python -m pip install -e ".[dev]"
 pytest -q
 
 # 机器基准
-model-loop bench --blender /path/to/blender --out out/bench
+blender-automation-skill bench --blender /path/to/blender \
+  --out out/bench
 
-# 完整自迭代示例
-model-loop demo  --blender /path/to/blender --out out/demo
+# 完整自迭代示例（无需模型资产）
+blender-automation-skill demo --blender /path/to/blender \
+  --out out/demo
 open out/demo/report.html</code></pre>
       </div>
       <div class="card">
         <h3>示例结果</h3>
         <p>隐藏参数 <code>(1.42, 0.74, 0.22)</code>，从 <code>(1.0, 1.0, 0.0)</code> 出发，
-          20 次评估收敛到 <code>(1.45, 0.716, 0.225)</code>，剪影 IoU <span style="color:var(--good);font-weight:600">0.953</span>。</p>
-        <p style="margin-top:10px">报告含迭代曲线、每次评估的表格、目标/最佳渲染对比。</p>
+          20 次评估收敛到 <code>(1.45, 0.76, 0.19)</code>，剪影 IoU
+          <span style="color:var(--good);font-weight:600">0.9378</span>。</p>
+        <p>报告含迭代曲线、每次评估的表格、目标/最佳渲染对比；默认输出到 <code>out/demo/report.html</code>。</p>
       </div>
     </div>
   </section>
@@ -189,26 +267,32 @@ open out/demo/report.html</code></pre>
     <h2>仓库结构</h2>
     <p class="sub">代码是 MIT，模型资产不进仓库，Blender 只作为外部工具调用。</p>
 <pre><code>src/model_loop/
-  params.py     参数空间：边界、采样、量化、内容哈希
-  search.py     坐标下降 / 随机搜索（预算可中断）
-  metrics.py    掩膜 IoU / RMSE / 质心 / 包围盒
-  blender.py    受控子进程：RLIMIT_AS、flock、超时
-  pipeline.py   Loop：缓存、预算、历史、序列化
-  report.py     单文件 HTML（内联 SVG + base64 图片）
-  demo.py       剪影自迭代示例
-  bench.py      机器基准
-tests/          54 个单测（不需要 Blender）
-docs/           三篇指南 + 本页</code></pre>
+  params.py      参数空间：边界、采样、量化、内容哈希
+  search.py      坐标下降 / 随机搜索（预算可中断）
+  metrics.py     掩膜 IoU / RMSE / 质心 / 包围盒
+  blender.py     受控子进程：RLIMIT_AS、flock、超时
+  pipeline.py    Loop：缓存、预算、历史、序列化
+  report.py      单文件 HTML（内联 SVG + base64 图片）
+  demo.py        剪影自迭代示例（真实 Blender 渲染）
+  bench.py       机器基准
+  cli.py         命令行入口
+  mcp_server.py  MCP server（stdio，6 个工具）
+tests/           68 个单测（不需要 Blender）
+SKILL.md         agent skill 说明（Claude Code / Codex / DSH 通用）
+examples/        mcp.json + mcp-clients/（各 agent 客户端配置样例）+ 自定义评估器
+docs/            指南（含 MCP 接入）+ 本页 + assets/ 真实渲染截图</code></pre>
   </section>
 
   <section>
     <h2>继续读</h2>
     <div class="links">
-      <a href="../README.md">README.md <span>安装、快速开始、设计边界</span></a>
+      <a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/README.md">README.md <span>安装、快速开始、设计边界</span></a>
       <a href="modeling-workflow.md">docs/modeling-workflow.md <span>场景脚本、单位、导出、常见坑</span></a>
       <a href="machine-tuning.md">docs/machine-tuning.md <span>基准、内存、串行、超时、引擎选择</span></a>
       <a href="self-iteration.md">docs/self-iteration.md <span>目标函数、缓存、搜索、验收</span></a>
-      <a href="../examples/custom_evaluator.py">examples/custom_evaluator.py <span>不依赖 Blender 的评估器示例</span></a>
+      <a href="mcp.md">docs/mcp.md <span>MCP 接入手册：客户端配置、参数表、报错解读</span></a>
+      <a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/SKILL.md">SKILL.md <span>给 agent 的调用说明与红线</span></a>
+      <a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/examples/custom_evaluator.py">examples/custom_evaluator.py <span>不依赖 Blender 的评估器示例</span></a>
     </div>
   </section>
 
