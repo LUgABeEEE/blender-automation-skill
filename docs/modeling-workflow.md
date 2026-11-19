@@ -19,13 +19,13 @@
 ```python
 import bpy, json, math, sys
 
-argv = sys.argv[sys.argv.index("--") + 1:]
-params = json.loads(argv[0])          # 参数永远是普通 JSON
-out_png = argv[1]                     # 输出路径由调用方决定
+argv = sys.argv[sys.argv.index("--") + 1 :]
+params = json.loads(argv[0])  # 参数永远是普通 JSON
+out_png = argv[1]  # 输出路径由调用方决定
 
-bpy.ops.wm.read_factory_settings(use_empty=True)   # 空场景，无默认灯/相机
+bpy.ops.wm.read_factory_settings(use_empty=True)  # 空场景，无默认灯/相机
 ...
-print("BLENDER_LOOP_RENDER_OK")       # 给外层一个成功标记
+print("BLENDER_LOOP_RENDER_OK")  # 给外层一个成功标记
 ```
 
 几条硬约定：
@@ -40,8 +40,8 @@ print("BLENDER_LOOP_RENDER_OK")       # 给外层一个成功标记
 Blender 的单位默认是米，而 3D 打印、测量、切片软件通常按毫米工作。
 
 ```python
-MM = 0.001                    # 1 mm in Blender units
-head_width = 0.228            # 228 mm，脚本内部用米
+MM = 0.001  # 1 mm in Blender units
+head_width = 0.228  # 228 mm，脚本内部用米
 ```
 
 - 导出 STL 时**显式**乘以 1000，并在 manifest 里写 `"units": "mm"`；
@@ -69,7 +69,7 @@ scene.render.engine = "CYCLES"
 scene.cycles.device = "CPU"
 scene.cycles.samples = 1
 scene.cycles.use_denoising = False
-scene.render.film_transparent = True          # alpha = 剪影
+scene.render.film_transparent = True  # alpha = 剪影
 scene.render.image_settings.color_mode = "RGBA"
 ```
 

@@ -44,7 +44,9 @@ class ParamSpec:
         if self.default is None:
             object.__setattr__(self, "default", (self.low + self.high) / 2.0)
         if not self.low <= self.default <= self.high:
-            raise ParamError(f"{self.name}: default {self.default} outside [{self.low}, {self.high}]")
+            raise ParamError(
+                f"{self.name}: default {self.default} outside [{self.low}, {self.high}]"
+            )
         if self.step is not None and self.step <= 0:
             raise ParamError(f"{self.name}: step must be > 0")
 

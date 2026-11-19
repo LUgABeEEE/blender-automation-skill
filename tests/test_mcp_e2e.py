@@ -78,9 +78,7 @@ def interpreter() -> str:
 
 
 def _console_script() -> Path | None:
-    local = _venv_python().parent / (
-        f"{CONSOLE_SCRIPT}.exe" if os.name == "nt" else CONSOLE_SCRIPT
-    )
+    local = _venv_python().parent / (f"{CONSOLE_SCRIPT}.exe" if os.name == "nt" else CONSOLE_SCRIPT)
     if local.exists():
         return local
     found = shutil.which(CONSOLE_SCRIPT)
@@ -148,9 +146,7 @@ class ServerProcess:
         self.proc.stdin.write(json.dumps(payload) + "\n")
         self.proc.stdin.flush()
 
-    def request(
-        self, method: str, params: dict | None = None, timeout: float = 120.0
-    ) -> dict:
+    def request(self, method: str, params: dict | None = None, timeout: float = 120.0) -> dict:
         self._next_id += 1
         request_id = self._next_id
         payload: dict[str, Any] = {"jsonrpc": "2.0", "id": request_id, "method": method}
@@ -167,9 +163,7 @@ class ServerProcess:
             except queue.Empty:
                 raise AssertionError(self._failure(method, "timed out")) from None
             if kind == "garbage":
-                raise AssertionError(
-                    self._failure(method, f"non-JSON line on stdout: {value!r}")
-                )
+                raise AssertionError(self._failure(method, f"non-JSON line on stdout: {value!r}"))
             if kind == "eof":
                 raise AssertionError(self._failure(method, "server closed stdout"))
             if isinstance(value, dict) and value.get("id") == request_id:

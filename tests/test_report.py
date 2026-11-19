@@ -25,7 +25,7 @@ def build_result() -> LoopResult:
 
 class ReportTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.tmp = Path(tempfile.mkdtemp(prefix="model-loop-report-"))
+        self.tmp = Path(tempfile.mkdtemp(prefix="bas-report-"))
 
     def test_writes_self_contained_html(self) -> None:
         path = render_report(build_result(), self.tmp / "report.html", title="Demo run")

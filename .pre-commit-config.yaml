@@ -28,3 +28,7 @@ repos:
       - id: ruff
         args: [--fix]
         types_or: [python, pyi]
+      # ruff also formats the Python blocks inside Markdown, which is exactly
+      # what `ruff format --check .` enforces in CI; keep the hook in sync.
+      - id: ruff-format
+        types_or: [python, pyi, markdown]

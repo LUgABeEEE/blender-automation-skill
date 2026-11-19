@@ -48,9 +48,7 @@ def test_space_accepts_bounds_and_spec_dicts():
     assert space.initial()["width"] == pytest.approx(1.0)
     assert space.initial()["height"] == pytest.approx(0.95)
 
-    explicit = mcp_server._space(
-        [{"name": "depth", "low": 0.0, "high": 4.0, "default": 1.5}]
-    )
+    explicit = mcp_server._space([{"name": "depth", "low": 0.0, "high": 4.0, "default": 1.5}])
     assert explicit.names == ("depth",)
     assert explicit.initial()["depth"] == pytest.approx(1.5)
 

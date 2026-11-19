@@ -22,7 +22,7 @@ def build_space() -> SearchSpace:
 
 class LoopTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.workdir = Path(tempfile.mkdtemp(prefix="model-loop-pipeline-"))
+        self.workdir = Path(tempfile.mkdtemp(prefix="bas-pipeline-"))
         self.calls: list[dict[str, float]] = []
 
     def evaluator(self, params: dict[str, float], workdir: Path) -> Evaluation:
