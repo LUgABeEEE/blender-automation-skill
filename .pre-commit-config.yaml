@@ -1,0 +1,30 @@
+# Local fast checks that mirror CI. CI remains the source of truth; these hooks
+# just keep a broken commit from being pushed in the first place.
+#
+#   python -m pip install -e ".[dev]"
+#   pre-commit install
+#   pre-commit run --all-files
+#
+# The ruff hook is pinned to the same version as the dev extra so local and CI
+# lint rules cannot drift; bump both together.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=512]
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.5
+    hooks:
+      - id: ruff
+        args: [--fix]
+        types_or: [python, pyi]
