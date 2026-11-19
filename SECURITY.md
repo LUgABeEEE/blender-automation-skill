@@ -13,7 +13,7 @@ You can expect an acknowledgement within a few days.
 
 ## Scope
 
-`blender-loop` starts subprocesses (Blender, or any binary you point it at) and
+`model-loop` starts subprocesses (Blender, or any binary you point it at) and
 writes files under the work directory it is given. Relevant risks:
 
 - **Command construction**: paths and arguments are passed as a list (never a

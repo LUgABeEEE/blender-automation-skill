@@ -3,7 +3,7 @@
 | 文件 | 需要 Blender | 说明 |
 |---|---|---|
 | `custom_evaluator.py` | 否 | 用纯 Python 目标函数演示评估器契约与报告 |
-| `../blender-loop demo` | 是 | 真实的剪影闭环：渲染 → IoU → 坐标下降 |
+| `../model-loop demo` | 是 | 真实的剪影闭环：渲染 → IoU → 坐标下降 |
 
 ## 写自己的评估器
 

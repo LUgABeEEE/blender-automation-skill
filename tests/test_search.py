@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import unittest
 
-from blender_loop.params import ParamSpec, SearchSpace
-from blender_loop.search import BudgetExhausted, coordinate_descent, random_search
+from model_loop.params import ParamSpec, SearchSpace
+from model_loop.search import BudgetExhausted, coordinate_descent, random_search
 
 
 def quadratic(params: dict[str, float]) -> float:

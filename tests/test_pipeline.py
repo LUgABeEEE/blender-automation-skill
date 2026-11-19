@@ -6,9 +6,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from blender_loop.params import ParamSpec, SearchSpace
-from blender_loop.pipeline import Evaluation, Loop, LoopResult
-from blender_loop.search import BudgetExhausted
+from model_loop.params import ParamSpec, SearchSpace
+from model_loop.pipeline import Evaluation, Loop, LoopResult
+from model_loop.search import BudgetExhausted
 
 
 def build_space() -> SearchSpace:
@@ -22,7 +22,7 @@ def build_space() -> SearchSpace:
 
 class LoopTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.workdir = Path(tempfile.mkdtemp(prefix="blender-loop-pipeline-"))
+        self.workdir = Path(tempfile.mkdtemp(prefix="model-loop-pipeline-"))
         self.calls: list[dict[str, float]] = []
 
     def evaluator(self, params: dict[str, float], workdir: Path) -> Evaluation:

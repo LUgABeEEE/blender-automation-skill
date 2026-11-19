@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from blender_loop.blender import (
+from model_loop.blender import (
     BlenderConfig,
     BlenderError,
     build_script_argv,
@@ -85,7 +85,7 @@ class RunTests(unittest.TestCase):
         self.assertEqual(result.stdout.strip(), str(256 * 1024 * 1024))
 
     def test_lock_file_is_created(self) -> None:
-        lock = Path(tempfile.mkdtemp(prefix="blender-loop-lock-")) / "nested" / "blender.lock"
+        lock = Path(tempfile.mkdtemp(prefix="model-loop-lock-")) / "nested" / "blender.lock"
         result = run([sys.executable, "-c", "print('locked')"], lock_path=lock)
         self.assertTrue(result.ok)
         self.assertTrue(lock.exists())

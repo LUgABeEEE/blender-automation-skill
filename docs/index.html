@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>blender-loop · 无头 Blender 建模 · 机器调优 · 自迭代闭环</title>
+<title>model-loop · 无头 Blender 建模 · 机器调优 · 自迭代闭环</title>
 <style>
   :root{
     color-scheme: light dark;
@@ -69,7 +69,7 @@
       <span class="chip">Blender 3.6+</span>
       <span class="chip">no model assets</span>
     </div>
-    <h1>blender-loop</h1>
+    <h1>model-loop</h1>
     <p class="lede">把「用 Blender 反复调模型」变成可复现的工程流程：
       参数空间 → 无头渲染 → 量化打分 → 搜索 → 报告。</p>
   </header>
@@ -148,10 +148,10 @@
 pytest -q
 
 # 机器基准
-blender-loop bench --blender /path/to/blender --out out/bench
+model-loop bench --blender /path/to/blender --out out/bench
 
 # 完整自迭代示例
-blender-loop demo  --blender /path/to/blender --out out/demo
+model-loop demo  --blender /path/to/blender --out out/demo
 open out/demo/report.html</code></pre>
       </div>
       <div class="card">
@@ -188,7 +188,7 @@ open out/demo/report.html</code></pre>
   <section>
     <h2>仓库结构</h2>
     <p class="sub">代码是 MIT，模型资产不进仓库，Blender 只作为外部工具调用。</p>
-<pre><code>src/blender_loop/
+<pre><code>src/model_loop/
   params.py     参数空间：边界、采样、量化、内容哈希
   search.py     坐标下降 / 随机搜索（预算可中断）
   metrics.py    掩膜 IoU / RMSE / 质心 / 包围盒

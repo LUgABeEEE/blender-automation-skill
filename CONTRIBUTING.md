@@ -12,7 +12,7 @@ pytest -q
 ruff check .
 ```
 
-Blender is only needed for `blender-loop demo` / `blender-loop bench`; the
+Blender is only needed for `model-loop demo` / `model-loop bench`; the
 unit tests must pass without it.
 
 ## Ground rules
@@ -21,7 +21,7 @@ unit tests must pass without it.
 - Unit tests must not require Blender or network access.
 - Keep the evaluator contract stable: `(params, workdir) -> Evaluation`.
 - New behaviour gets a test; bug fixes get a regression test.
-- Prefer small, typed modules in `src/blender_loop/` over clever one-liners.
+- Prefer small, typed modules in `src/model_loop/` over clever one-liners.
 
 ## Pull requests
 
@@ -29,7 +29,7 @@ unit tests must pass without it.
 2. `pytest -q` and `ruff check .` must pass.
 3. Describe *why* the change is needed, and how you verified it (commands,
    sample numbers).
-4. If you touched rendering or process limits, include a `blender-loop bench`
+4. If you touched rendering or process limits, include a `model-loop bench`
    before/after snippet.
 
 ## Commit messages

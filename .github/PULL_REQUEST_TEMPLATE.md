@@ -10,7 +10,7 @@
 
 - [ ] `pytest -q`
 - [ ] `ruff check .`
-- [ ] (if rendering/process related) `blender-loop bench` before/after
+- [ ] (if rendering/process related) `model-loop bench` before/after
 
 ## Checklist
 

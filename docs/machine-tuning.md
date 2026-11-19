@@ -6,7 +6,7 @@
 ## 1. 先量
 
 ```bash
-blender-loop bench --blender /path/to/blender --out out/bench
+model-loop bench --blender /path/to/blender --out out/bench
 ```
 
 输出 `bench.json`（机器可读）与 `bench.html`（人看）。它测四件事：

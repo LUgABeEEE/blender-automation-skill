@@ -1,4 +1,4 @@
-"""blender-loop: headless Blender modeling, machine tuning and self-iteration."""
+"""model-loop: headless Blender modeling, machine tuning and self-iteration."""
 
 from __future__ import annotations
 

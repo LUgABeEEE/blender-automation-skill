@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from blender_loop import Evaluation, Loop, ParamSpec, SearchSpace, render_report
+from model_loop import Evaluation, Loop, ParamSpec, SearchSpace, render_report
 
 TARGET = {"x": 3.0, "y": -2.0}
 

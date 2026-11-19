@@ -8,9 +8,9 @@ from pathlib import Path
 
 from PIL import Image
 
-from blender_loop.params import ParamSpec, SearchSpace
-from blender_loop.pipeline import Evaluation, LoopResult
-from blender_loop.report import render_report
+from model_loop.params import ParamSpec, SearchSpace
+from model_loop.pipeline import Evaluation, LoopResult
+from model_loop.report import render_report
 
 
 def build_result() -> LoopResult:
@@ -25,7 +25,7 @@ def build_result() -> LoopResult:
 
 class ReportTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.tmp = Path(tempfile.mkdtemp(prefix="blender-loop-report-"))
+        self.tmp = Path(tempfile.mkdtemp(prefix="model-loop-report-"))
 
     def test_writes_self_contained_html(self) -> None:
         path = render_report(build_result(), self.tmp / "report.html", title="Demo run")
