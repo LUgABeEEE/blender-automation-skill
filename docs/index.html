@@ -111,7 +111,7 @@
   <section>
     <h2>在任何 agent 里调用（MCP）</h2>
     <p class="sub"><code>blender-automation-skill-mcp</code> 走 stdio 讲 MCP，工具只返回 JSON，缺 Blender 或参数非法时返回 <code>{"ok": false, "error": ...}</code> 而不是抛异常。
-      每个客户端的填法、参数表与报错解读见 <a href="mcp.md">docs/mcp.md</a>。</p>
+      每个客户端的填法、参数表与报错解读见 <a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/docs/mcp.md">docs/mcp.md</a>。</p>
 <pre><code>pip install "blender-automation-skill[mcp]"
 
 # Claude Code
@@ -156,17 +156,17 @@ codex mcp add blender -- blender-automation-skill-mcp
       <div class="card">
         <h3>① 建模工作流</h3>
         <p>场景即代码：<code>--factory-startup</code> 从空场景重建，单位/坐标/导出全部显式约定。</p>
-        <p><a href="modeling-workflow.md">modeling-workflow.md →</a></p>
+        <p><a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/docs/modeling-workflow.md">modeling-workflow.md →</a></p>
       </div>
       <div class="card">
         <h3>② 机器调优</h3>
         <p>先量后调：冷启动/渲染/布尔基准，地址空间上限、flock 串行、单次超时、峰值 RSS。</p>
-        <p><a href="machine-tuning.md">machine-tuning.md →</a></p>
+        <p><a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/docs/machine-tuning.md">machine-tuning.md →</a></p>
       </div>
       <div class="card">
         <h3>③ 自迭代闭环</h3>
         <p>评估器契约 + 内容哈希缓存 + 预算 + 坐标下降，产出可离线查看的单文件 HTML 报告。</p>
-        <p><a href="self-iteration.md">self-iteration.md →</a></p>
+        <p><a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/docs/self-iteration.md">self-iteration.md →</a></p>
       </div>
     </div>
   </section>
@@ -287,10 +287,10 @@ docs/            指南（含 MCP 接入）+ 本页 + assets/ 真实渲染截图
     <h2>继续读</h2>
     <div class="links">
       <a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/README.md">README.md <span>安装、快速开始、设计边界</span></a>
-      <a href="modeling-workflow.md">docs/modeling-workflow.md <span>场景脚本、单位、导出、常见坑</span></a>
-      <a href="machine-tuning.md">docs/machine-tuning.md <span>基准、内存、串行、超时、引擎选择</span></a>
-      <a href="self-iteration.md">docs/self-iteration.md <span>目标函数、缓存、搜索、验收</span></a>
-      <a href="mcp.md">docs/mcp.md <span>MCP 接入手册：客户端配置、参数表、报错解读</span></a>
+      <a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/docs/modeling-workflow.md">docs/modeling-workflow.md <span>场景脚本、单位、导出、常见坑</span></a>
+      <a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/docs/machine-tuning.md">docs/machine-tuning.md <span>基准、内存、串行、超时、引擎选择</span></a>
+      <a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/docs/self-iteration.md">docs/self-iteration.md <span>目标函数、缓存、搜索、验收</span></a>
+      <a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/docs/mcp.md">docs/mcp.md <span>MCP 接入手册：客户端配置、参数表、报错解读</span></a>
       <a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/SKILL.md">SKILL.md <span>给 agent 的调用说明与红线</span></a>
       <a href="https://github.com/LUgABeEEE/blender-automation-skill/blob/main/examples/custom_evaluator.py">examples/custom_evaluator.py <span>不依赖 Blender 的评估器示例</span></a>
     </div>

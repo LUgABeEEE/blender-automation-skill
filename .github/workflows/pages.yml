@@ -1,5 +1,7 @@
 # Publish docs/ as a static site on GitHub Pages.
 # One-time setup: Settings -> Pages -> Build and deployment -> Source: GitHub Actions.
+# docs/ is served verbatim: Markdown files are NOT rendered (they are returned as text/markdown),
+# so every documentation link in docs/index.html must use an absolute GitHub blob URL.
 name: pages
 
 on:
