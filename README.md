@@ -153,7 +153,7 @@ src/model_loop/
   bench.py       机器基准（渲染 / 布尔 / 冷启动 / RSS）
   cli.py         命令行入口
   mcp_server.py  MCP server（stdio，6 个工具）
-tests/           68 个单测（不需要 Blender）
+tests/           69 个单测（不需要 Blender）
 SKILL.md         agent skill 说明（Claude Code / Codex / DSH 通用）
 examples/mcp.json  MCP 客户端配置示例
 examples/mcp-clients/  各 agent 客户端配置样例（Claude Code / Codex / Cursor / DSH）
