@@ -1,0 +1,10 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schema/mcp.json",
+  "mcpServers": {
+    "blender": {
+      "command": "blender-automation-skill-mcp",
+      "args": [],
+      "env": {}
+    }
+  }
+}
