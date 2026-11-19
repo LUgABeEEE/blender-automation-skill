@@ -94,8 +94,7 @@ def run_demo(
 ) -> LoopResult:
     """Run the silhouette demo and write history + HTML report under ``outdir``."""
     outdir = Path(outdir)
-    renders = outdir / "renders"
-    renders.mkdir(parents=True, exist_ok=True)
+    outdir.mkdir(parents=True, exist_ok=True)
 
     require_blender(config)
     script = outdir / "blender_eval.py"
