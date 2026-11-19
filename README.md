@@ -12,7 +12,7 @@
 **参数空间 → 无头渲染/求值 → 打分 → 搜索 → 报告**。它不绑定具体模型，也不依赖 Blender 的 GUI，
 所有几何工作都在一个可审计的脚本里完成；Blender 只作为受内存/超时约束的子进程被调用。
 
-- **引擎**：`model-loop`（Python 包 `model_loop`，稳定 API）
+- **引擎**：`blender-automation-skill`（Python 包 `model_loop`，稳定 API；`model-loop` 命令仍是可用别名）
 - **对外形态**：CLI + **MCP server** + [SKILL.md](SKILL.md)——任何 agent 都能调用
 
 ## 在任何 agent 里调用（MCP）
@@ -75,6 +75,15 @@ render 1024²/64spp  0.98 s
 EXACT boolean       0.23 s（29k 顶点）
 peak child RSS    454 MB
 ```
+
+## 真实输出（本机实测，非示意图）
+
+![剪影自迭代：目标 / 最佳 / 像素差异](docs/assets/demo-compare.png)
+
+`demo` 把「隐藏参数」渲染成目标剪影，再让坐标下降只凭 IoU 把它找回来：目标 `(1.42, 0.74, 0.22)` 只用于渲染参考图，
+搜索从 `(1.0, 1.0, 0.0)` 出发，20 次评估收敛到 `(1.45, 0.76, 0.19)`，掩膜 **IoU 0.9378**（512²、1 spp、全程 9.1 s）。
+左：目标剪影；中：最佳候选渲染；右：像素级差异（绿=重合，红=只属于目标，蓝=只属于候选）。
+这三张图（`docs/assets/demo-*.png`）与 `out/demo/report.html` 都由 `blender-automation-skill demo` 现场生成，仓库里不存任何预置渲染。
 
 ## 为什么
 
@@ -140,10 +149,11 @@ src/model_loop/
   bench.py       机器基准（渲染 / 布尔 / 冷启动 / RSS）
   cli.py         命令行入口
   mcp_server.py  MCP server（stdio，6 个工具）
-tests/           59 个单测（不需要 Blender）
+tests/           68 个单测（不需要 Blender）
 SKILL.md         agent skill 说明（Claude Code / Codex / DSH 通用）
 examples/mcp.json  MCP 客户端配置示例
-docs/            三篇指南 + 单文件 HTML 导览
+examples/mcp-clients/  各 agent 客户端配置样例（Claude Code / Codex / Cursor / DSH）
+docs/            四篇指南 + 单文件 HTML 导览
 ```
 
 ## 边界
@@ -159,6 +169,7 @@ docs/            三篇指南 + 单文件 HTML 导览
 - [建模工作流](docs/modeling-workflow.md)：脚本边界、确定性、单位、导出与命名
 - [机器调优](docs/machine-tuning.md)：基准、内存、串行、超时、失败模式
 - [自迭代闭环](docs/self-iteration.md)：目标函数、参数空间、预算、收敛与复现
+- [MCP 接入](docs/mcp.md)：Claude Code / Codex / Cursor / DSH 的接入配置、6 个工具逐参数说明与常见错误
 - [HTML 导览](docs/index.html)：一页看完结构、闭环与命令
 - [SKILL.md](SKILL.md)：给 agent 看的调用说明与红线
 
