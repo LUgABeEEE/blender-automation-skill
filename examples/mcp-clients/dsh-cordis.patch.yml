@@ -1,0 +1,13 @@
+# DSH（DeepSeek Harness）：追加到 profile 的 cordis.patch.yml 里已有的 insert: 列表，
+# 缩进与同级插件对齐；改完重启 dsh-web 生效。
+insert:
+    - id: mcp-blender-automation-skill
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: blender
+        transport: stdio
+        command: blender-automation-skill-mcp
+        args: []
+        # cwd: /absolute/path/to/your/project    # 相对产物目录的落点（可选）
+        # env:
+        #   PATH: /usr/local/bin:/usr/bin:/bin

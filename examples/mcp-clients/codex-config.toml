@@ -1,0 +1,10 @@
+# Codex CLI：把下面的表追加到 ~/.codex/config.toml（顶层键是 mcp_servers，不是 mcpServers）。
+# 等价的命令行写法：codex mcp add blender -- blender-automation-skill-mcp
+
+[mcp_servers.blender]
+command = "blender-automation-skill-mcp"
+args = []
+
+# 需要环境变量时用子表（示例：让 server 子进程看见 Blender 所在目录）
+# [mcp_servers.blender.env]
+# PATH = "/usr/local/bin:/usr/bin:/bin"
