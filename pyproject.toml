@@ -3,14 +3,14 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "blender-loop"
+name = "blender-automation-skill"
 version = "0.1.0"
-description = "Headless Blender modeling workflow, machine tuning and closed-loop self-iteration toolkit"
+description = "AI Skill + MCP toolkit for agent-driven headless Blender modelling: parameter search, quantified scoring and self-iteration loops"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "LUgABeEEE", email = "LUgABeEEE@users.noreply.github.com" }]
-keywords = ["blender", "headless", "3d-modeling", "closed-loop", "optimization", "silhouette"]
+keywords = ["blender", "headless", "3d-modeling", "mcp", "model-context-protocol", "ai-agent", "agent-tools", "tool-calling", "automation", "closed-loop", "optimization", "silhouette"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
@@ -27,15 +27,18 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "ruff>=0.5"]
+mcp = ["mcp>=1.9"]
+dev = ["pytest>=8.0", "ruff>=0.5", "mcp>=1.9"]
 
 [project.scripts]
-blender-loop = "blender_loop.cli:main"
+blender-automation-skill = "model_loop.cli:main"
+model-loop = "model_loop.cli:main"
+blender-automation-skill-mcp = "model_loop.mcp_server:main"
 
 [project.urls]
-Homepage = "https://github.com/LUgABeEEE/blender-loop"
-Issues = "https://github.com/LUgABeEEE/blender-loop/issues"
-Changelog = "https://github.com/LUgABeEEE/blender-loop/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/LUgABeEEE/blender-automation-skill"
+Issues = "https://github.com/LUgABeEEE/blender-automation-skill/issues"
+Changelog = "https://github.com/LUgABeEEE/blender-automation-skill/blob/main/CHANGELOG.md"
 
 [tool.setuptools]
 package-dir = { "" = "src" }
