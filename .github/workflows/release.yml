@@ -84,7 +84,7 @@ jobs:
           /tmp/wheelcheck/bin/blender-automation-skill --version
           /tmp/wheelcheck/bin/blender-automation-skill version
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/
