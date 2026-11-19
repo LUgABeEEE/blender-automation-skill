@@ -1,14 +1,40 @@
 name: ci
-permissions:
-  contents: read
 
 on:
   push:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  lint:
+    name: lint (ruff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Ruff
+        run: ruff check .
+
   test:
+    name: test (py${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -20,14 +46,82 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
 
       - name: Install
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e ".[dev]"
 
-      - name: Lint
-        run: ruff check .
-
+      # The oldest and middle interpreters only need to pass; the newest one
+      # also publishes the coverage number so the job summary shows drift.
       - name: Test
+        if: matrix.python-version != '3.12'
         run: pytest -q
+
+      - name: Test with coverage
+        if: matrix.python-version == '3.12'
+        run: |
+          pytest -q --cov=model_loop --cov-report=term-missing:skip-covered --cov-report=xml
+          {
+            echo '### coverage'
+            echo '```'
+            coverage report --skip-covered
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload coverage report
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+          if-no-files-found: ignore
+
+  package:
+    name: package (build + twine check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install build tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "build>=1.2" "twine>=5.0"
+
+      - name: Build sdist and wheel
+        run: python -m build
+
+      - name: Check distribution metadata
+        run: twine check dist/*
+
+      # Guards the packaging contract: the wheel must carry the typed marker,
+      # the code and the entry points; the sdist must carry the marker too.
+      - name: Check the wheel and sdist contents
+        run: |
+          python -m zipfile -l dist/*.whl
+          python -m zipfile -l dist/*.whl | grep -q 'model_loop/py.typed'
+          python -m zipfile -l dist/*.whl | grep -q 'model_loop/cli.py'
+          python -m zipfile -l dist/*.whl | grep -q 'entry_points.txt'
+          tar -tzf dist/*.tar.gz | grep -q 'src/model_loop/py.typed'
+
+      - name: Install the built wheel and run the console scripts
+        run: |
+          python -m venv /tmp/wheelcheck
+          /tmp/wheelcheck/bin/python -m pip install --upgrade pip > /dev/null
+          /tmp/wheelcheck/bin/python -m pip install dist/*.whl > /dev/null
+          /tmp/wheelcheck/bin/blender-automation-skill --version
+          /tmp/wheelcheck/bin/blender-automation-skill version
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
