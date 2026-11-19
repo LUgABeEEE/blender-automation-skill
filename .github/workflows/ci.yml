@@ -34,7 +34,10 @@ jobs:
         run: ruff check .
 
   test:
-    name: test (py${{ matrix.python-version }})
+    # The protected branch requires the contexts "test (3.10)", "test (3.11)"
+    # and "test (3.12)" (ruleset "require-ci"), so this name must stay exactly
+    # `test (<version>)`. Changing it silently makes main unpushable.
+    name: test (${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
