@@ -100,7 +100,7 @@ jobs:
     permissions:
       id-token: write # the OIDC token PyPI exchanges for an upload credential
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist/
@@ -117,7 +117,7 @@ jobs:
     permissions:
       contents: write # gh release create needs to write release notes
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist/
