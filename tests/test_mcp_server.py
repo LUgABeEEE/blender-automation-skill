@@ -82,3 +82,100 @@ def test_report_reports_a_missing_history(tmp_path):
     payload = _call(server, "blender_report", {"history": str(tmp_path / "nope.json")})
     assert payload["ok"] is False
     assert payload["error"]
+
+
+def _target_png(path, size: int = 16):
+    """Write a small RGBA mask: opaque square on transparent film."""
+    from PIL import Image
+
+    image = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    for x in range(4, 12):
+        for y in range(4, 12):
+            image.putpixel((x, y), (255, 255, 255, 255))
+    image.save(path)
+    return path
+
+
+def test_bench_wraps_the_runner(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        mcp_server,
+        "run_benchmark",
+        lambda config, out: {"blender_version": "X 1.0", "measured": {}},
+    )
+    payload = _call(mcp_server.build_server(), "blender_bench", {"out_dir": str(tmp_path)})
+    assert payload["ok"] is True
+    assert payload["report"]["blender_version"] == "X 1.0"
+
+
+def test_run_script_surfaces_the_child_exit_code(monkeypatch, tmp_path):
+    class Result:
+        exit_code = 1
+        duration_s = 0.5
+        stdout = "partial output"
+        stderr = "boom"
+
+        def ok(self) -> bool:
+            return False
+
+    monkeypatch.setattr(mcp_server, "run_script", lambda *args, **kwargs: Result())
+    payload = _call(
+        mcp_server.build_server(),
+        "blender_run_script",
+        {"script": str(tmp_path / "x.py"), "out_dir": str(tmp_path)},
+    )
+    assert payload["ok"] is False
+    assert payload["exit_code"] == 1
+    assert "boom" in payload["stderr_tail"]
+
+
+def test_demo_wraps_run_demo(monkeypatch, tmp_path):
+    from model_loop.pipeline import LoopResult
+
+    monkeypatch.setattr(mcp_server, "run_demo", lambda *args, **kwargs: LoopResult(best=None))
+    payload = _call(mcp_server.build_server(), "blender_demo", {"out_dir": str(tmp_path)})
+    assert payload["ok"] is True
+    assert payload["evaluations"] == 0
+
+
+def test_report_renders_a_real_history(tmp_path):
+    from model_loop.params import ParamSpec, SearchSpace
+    from model_loop.pipeline import Evaluation, LoopResult
+
+    point = Evaluation(params={"width": 1.0}, score=0.5)
+    result = LoopResult(
+        best=point,
+        history=[point],
+        space=SearchSpace([ParamSpec("width", 0.4, 2.0, default=1.0)]),
+    )
+    history = result.save(tmp_path / "history.json")
+    out = tmp_path / "report.html"
+    payload = _call(
+        mcp_server.build_server(), "blender_report", {"history": str(history), "out": str(out)}
+    )
+    assert payload["ok"] is True
+    assert out.exists()
+
+
+def test_optimize_returns_a_structured_error_when_blender_fails(monkeypatch, tmp_path):
+    from model_loop.blender import BlenderError
+
+    target = _target_png(tmp_path / "target.png")
+
+    def boom(*args, **kwargs):
+        raise BlenderError("no blender")
+
+    monkeypatch.setattr(mcp_server, "run_script", boom)
+    payload = _call(
+        mcp_server.build_server(),
+        "blender_optimize",
+        {
+            "script": str(tmp_path / "s.py"),
+            "target_png": str(target),
+            "space": {"width": [0.4, 2.0]},
+            "out_dir": str(tmp_path / "run"),
+            "budget": 2,
+            "rounds": 1,
+        },
+    )
+    assert payload["ok"] is False
+    assert "no blender" in payload["error"]
