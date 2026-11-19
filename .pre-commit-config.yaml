@@ -5,11 +5,11 @@
 #   pre-commit install
 #   pre-commit run --all-files
 #
-# The ruff hook is pinned to the same version as the dev extra so local and CI
-# lint rules cannot drift; bump both together.
+# The ruff hooks are pinned to the same version as the dev extra so local and CI
+# rules cannot drift; bump both together with `.pre-commit autoupdate`.
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -23,7 +23,7 @@ repos:
         args: [--fix=lf]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.17.5
+    rev: v0.17.6
     hooks:
       - id: ruff
         args: [--fix]
