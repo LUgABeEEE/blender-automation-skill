@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "blender": {
+      "type": "stdio",
+      "command": "blender-automation-skill-mcp",
+      "args": []
+    }
+  }
+}

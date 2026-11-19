@@ -45,6 +45,19 @@ _SCRIPT_CONTRACT = (
     "It must read argv after '--', render one silhouette to <png-out> and exit 0."
 )
 
+# Clients discover tools through their description, which the SDK takes from
+# the function docstring. A docstring assembled with "+" is not a docstring at
+# all - Python stores nothing, so the description silently becomes empty - hence
+# the two tools that embed the script contract pass it explicitly instead.
+_RUN_SCRIPT_DESCRIPTION = (
+    "Run one Blender script with JSON parameters and report what it produced.\n\n"
+    + _SCRIPT_CONTRACT
+)
+_OPTIMIZE_DESCRIPTION = (
+    "Search a parameter space against a target silhouette (maximise mask IoU).\n\n"
+    + _SCRIPT_CONTRACT
+)
+
 
 def _json(payload: Any) -> str:
     return json.dumps(payload, indent=1, sort_keys=True, ensure_ascii=False, default=str)
@@ -140,7 +153,7 @@ def build_server() -> Any:
             return _json({"ok": False, "error": str(exc)})
         return _json({"ok": True, "out_dir": str(out_dir), "report": report})
 
-    @server.tool()
+    @server.tool(description=_RUN_SCRIPT_DESCRIPTION)
     def blender_run_script(
         script: str,
         params: dict[str, float] | None = None,
@@ -150,10 +163,6 @@ def build_server() -> Any:
         memory_mb: int = 8192,
         timeout_s: float = 900.0,
     ) -> str:
-        """Run one Blender script with JSON parameters and report what it produced.
-
-        """ + _SCRIPT_CONTRACT + """
-        """
         workdir = Path(out_dir)
         workdir.mkdir(parents=True, exist_ok=True)
         png = workdir / "render.png"
@@ -176,7 +185,7 @@ def build_server() -> Any:
             }
         )
 
-    @server.tool()
+    @server.tool(description=_OPTIMIZE_DESCRIPTION)
     def blender_optimize(
         script: str,
         target_png: str,
@@ -189,10 +198,6 @@ def build_server() -> Any:
         memory_mb: int = 8192,
         timeout_s: float = 900.0,
     ) -> str:
-        """Search a parameter space against a target silhouette (maximise mask IoU).
-
-        """ + _SCRIPT_CONTRACT + """
-        """
         try:
             search = _space(space)
             target = load_mask(Path(target_png))
