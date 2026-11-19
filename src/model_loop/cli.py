@@ -1,4 +1,4 @@
-"""Command line interface: ``model-loop <command>``."""
+"""Command line interface: ``blender-automation-skill <command>``."""
 
 from __future__ import annotations
 
@@ -17,10 +17,18 @@ from .report import render_report
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="model-loop",
-        description="Headless Blender modeling, machine tuning and self-iteration loops.",
+        prog="blender-automation-skill",
+        description=(
+            "AI Skill + MCP toolkit for agent-driven headless Blender modelling: "
+            "parameter search, quantified scoring and self-iteration loops."
+        ),
+        epilog="The model-loop command remains available as an alias.",
     )
-    parser.add_argument("--version", action="version", version=f"model-loop {__version__}")
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"blender-automation-skill {__version__}",
+    )
     sub = parser.add_subparsers(dest="command", required=True)
 
     version = sub.add_parser("version", help="print the package version as JSON")
@@ -67,7 +75,7 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
 
     if args.handler == "version":
-        print(json.dumps({"name": "model-loop", "version": __version__}))
+        print(json.dumps({"name": "blender-automation-skill", "version": __version__}))
         return 0
 
     if args.handler == "report":

@@ -12,7 +12,8 @@ pytest -q
 ruff check .
 ```
 
-Blender is only needed for `model-loop demo` / `model-loop bench`; the
+Blender is only needed for `blender-automation-skill demo` /
+`blender-automation-skill bench`; the
 unit tests must pass without it.
 
 ## Ground rules
@@ -29,7 +30,8 @@ unit tests must pass without it.
 2. `pytest -q` and `ruff check .` must pass.
 3. Describe *why* the change is needed, and how you verified it (commands,
    sample numbers).
-4. If you touched rendering or process limits, include a `model-loop bench`
+4. If you touched rendering or process limits, include a
+   `blender-automation-skill bench`
    before/after snippet.
 
 ## Commit messages
