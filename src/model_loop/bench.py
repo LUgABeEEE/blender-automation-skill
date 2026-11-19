@@ -27,7 +27,7 @@ BENCH_RENDERS: tuple[tuple[int, int], ...] = (
     (1024, 64),
 )
 
-BENCH_SCRIPT = r'''
+BENCH_SCRIPT = r"""
 import bpy, json, math, sys, time
 
 argv = sys.argv[sys.argv.index("--") + 1:]
@@ -104,7 +104,7 @@ result["boolean"] = {
 with open(out_json, "w", encoding="utf-8") as handle:
     json.dump(result, handle, indent=1)
 print("BLENDER_LOOP_BENCH_OK")
-'''
+"""
 
 STARTUP_SCRIPT = "print('BLENDER_LOOP_STARTUP_OK')\n"
 
@@ -199,19 +199,19 @@ td.num{{text-align:right;font-variant-numeric:tabular-nums}}
 h1{{font-size:24px}} h2{{font-size:17px;margin-top:28px}}
 </style></head><body>
 <h1>Blender machine benchmark</h1>
-<p>{report.get('blender_version')} · {host.get('platform')}</p>
+<p>{report.get("blender_version")} · {host.get("platform")}</p>
 <h2>Host</h2><table>{host_rows}</table>
 <h2>Process baseline</h2>
 <table><tr><td>Cold start (headless, no scene)</td>
-<td class="num">{report.get('startup_seconds')} s</td></tr>
+<td class="num">{report.get("startup_seconds")} s</td></tr>
 <tr><td>Peak child RSS (all runs)</td>
-<td class="num">{report.get('peak_child_rss_mb')} MB</td></tr></table>
+<td class="num">{report.get("peak_child_rss_mb")} MB</td></tr></table>
 <h2>Cycles render (CPU)</h2>
 <table><thead><tr><th>Resolution</th><th class="num">Samples</th><th class="num">Time</th></tr></thead>
 <tbody>{rows}</tbody></table>
 <h2>One EXACT Boolean</h2>
-<table><tr><td>Time</td><td class="num">{boolean.get('seconds')} s</td></tr>
-<tr><td>Result</td><td>{boolean.get('vertices')} vertices / {boolean.get('polygons')} polygons</td></tr></table>
+<table><tr><td>Time</td><td class="num">{boolean.get("seconds")} s</td></tr>
+<tr><td>Result</td><td>{boolean.get("vertices")} vertices / {boolean.get("polygons")} polygons</td></tr></table>
 </body></html>
 """
 

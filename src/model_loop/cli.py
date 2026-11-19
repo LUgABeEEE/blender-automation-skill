@@ -56,7 +56,9 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def _add_blender_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--blender", default="blender", help="Blender binary (default: blender on PATH)")
+    parser.add_argument(
+        "--blender", default="blender", help="Blender binary (default: blender on PATH)"
+    )
     parser.add_argument("--memory-mb", type=int, default=8192, help="address-space cap per process")
     parser.add_argument("--timeout", type=float, default=900.0, help="per-call timeout in seconds")
     parser.add_argument("--lock", default=None, help="optional global lock file (serialise runs)")

@@ -48,7 +48,7 @@ python 主进程 ──spawn──> blender -b --factory-startup -P eval.py -- <
 ## 3. 内存：给地址空间设上限
 
 ```python
-BlenderConfig(binary="blender", memory_mb=8192)   # RLIMIT_AS = 8 GiB
+BlenderConfig(binary="blender", memory_mb=8192)  # RLIMIT_AS = 8 GiB
 ```
 
 - 用 `RLIMIT_AS`（地址空间）而不是 RSS：在分配阶段就失败，而不是等到系统 OOM；
@@ -72,7 +72,7 @@ BlenderConfig(lock_path=Path("out/blender.lock"))
 ## 5. 超时：卡死比慢更危险
 
 ```python
-BlenderConfig(timeout_s=900)     # 单次调用上限
+BlenderConfig(timeout_s=900)  # 单次调用上限
 ```
 
 - 卡在驱动、坏网格、无限循环时，只有超时能救你；
@@ -96,8 +96,8 @@ BlenderConfig(timeout_s=900)     # 单次调用上限
 ```python
 result = run_script(config, script, args)
 result.returncode, result.timed_out, result.duration_s
-result.stdout, result.stderr        # 失败时取 stderr 末尾几行
-result.check()                      # 不 ok 就抛 BlenderError（含 stderr 尾部）
+result.stdout, result.stderr  # 失败时取 stderr 末尾几行
+result.check()  # 不 ok 就抛 BlenderError（含 stderr 尾部）
 ```
 
 - 把 `duration_s` 记进评估记录，报告里能看到"哪一步变慢了"；

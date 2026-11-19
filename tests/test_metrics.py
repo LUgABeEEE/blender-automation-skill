@@ -73,7 +73,7 @@ class MaskMetricTests(unittest.TestCase):
 
 class LoadMaskTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.tmp = Path(tempfile.mkdtemp(prefix="model-loop-metrics-"))
+        self.tmp = Path(tempfile.mkdtemp(prefix="bas-metrics-"))
 
     def _write_rgba(self, name: str, box: tuple[int, int, int, int]) -> Path:
         image = Image.new("RGBA", (20, 20), (0, 0, 0, 0))

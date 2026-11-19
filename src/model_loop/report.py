@@ -77,7 +77,7 @@ def _score_chart(scores: list[float], width: int = 860, height: int = 220) -> st
         f'<text x="{width - pad}" y="{height - 6}" fill="currentColor" font-size="11"'
         f' text-anchor="end" opacity="0.6">{len(scores)}</text>'
         f'<text x="{pad}" y="16" fill="currentColor" font-size="11" opacity="0.6">'
-        f'max {hi:.3f}</text>'
+        f"max {hi:.3f}</text>"
         f'<text x="{pad}" y="{pad + inner_h + 12}" fill="currentColor" font-size="11"'
         f' opacity="0.6">min {lo:.3f}</text>'
     )
@@ -93,8 +93,13 @@ def _score_chart(scores: list[float], width: int = 860, height: int = 220) -> st
 
 def _embed(path: Path) -> str:
     suffix = path.suffix.lower().lstrip(".") or "png"
-    mime = {"png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg",
-            "gif": "image/gif", "webp": "image/webp"}.get(suffix, "application/octet-stream")
+    mime = {
+        "png": "image/png",
+        "jpg": "image/jpeg",
+        "jpeg": "image/jpeg",
+        "gif": "image/gif",
+        "webp": "image/webp",
+    }.get(suffix, "application/octet-stream")
     data = base64.b64encode(path.read_bytes()).decode("ascii")
     return f"data:{mime};base64,{data}"
 
@@ -135,8 +140,10 @@ def render_report(
         ("Evaluations", str(len(scores))),
         ("Best score", _fmt(best.score) if best else "—"),
         ("Score range", f"{_fmt(min(scores))} → {_fmt(max(scores))}" if scores else "—"),
-        ("Best params", ", ".join(f"{name}={best.params[name]:.4g}" for name in param_names)
-         if best else "—"),
+        (
+            "Best params",
+            ", ".join(f"{name}={best.params[name]:.4g}" for name in param_names) if best else "—",
+        ),
     ]
     cards_html = "".join(
         f'<div class="card"><div class="k">{html.escape(k)}</div>'
@@ -145,11 +152,19 @@ def render_report(
     )
 
     rows = []
-    best_key = tuple(sorted((name, round(value, 9)) for name, value in best.params.items())) if best else ()
-    for index, item in enumerate(result.history[-max_rows:], start=len(result.history) - min(
-            len(result.history), max_rows) + 1):
-        cells = "".join(f'<td class="num">{item.params.get(name, float("nan")):.4g}</td>'
-                        for name in param_names)
+    best_key = (
+        tuple(sorted((name, round(value, 9)) for name, value in best.params.items()))
+        if best
+        else ()
+    )
+    for index, item in enumerate(
+        result.history[-max_rows:],
+        start=len(result.history) - min(len(result.history), max_rows) + 1,
+    ):
+        cells = "".join(
+            f'<td class="num">{item.params.get(name, float("nan")):.4g}</td>'
+            for name in param_names
+        )
         key = tuple(sorted((name, round(value, 9)) for name, value in item.params.items()))
         row_class = ' class="best"' if key == best_key else ""
         rows.append(
@@ -159,12 +174,14 @@ def render_report(
         )
     head_cells = "".join(f"<th>{html.escape(name)}</th>" for name in param_names)
     table = (
-        "<table><thead><tr><th>#</th>"
-        f"{head_cells}<th class='num'>score</th><th class='num'>time</th>"
-        "</tr></thead><tbody>"
-        + "".join(rows)
-        + "</tbody></table>"
-    ) if rows else "<p>no evaluations recorded</p>"
+        (
+            "<table><thead><tr><th>#</th>"
+            f"{head_cells}<th class='num'>score</th><th class='num'>time</th>"
+            "</tr></thead><tbody>" + "".join(rows) + "</tbody></table>"
+        )
+        if rows
+        else "<p>no evaluations recorded</p>"
+    )
 
     figures = _figures(images or {}, embed_images)
     best_json = html.escape(

@@ -18,7 +18,7 @@ from .report import render_report
 
 __all__ = ["SPACE", "TARGET_PARAMS", "run_demo"]
 
-BLENDER_SCRIPT = r'''
+BLENDER_SCRIPT = r"""
 import bpy, json, math, sys
 
 argv = sys.argv[sys.argv.index("--") + 1:]
@@ -69,7 +69,7 @@ shape.data.materials.append(material)
 
 bpy.ops.render.render(write_still=True)
 print("BLENDER_LOOP_RENDER_OK")
-'''
+"""
 
 #: The space the search may move in.
 SPACE = SearchSpace(

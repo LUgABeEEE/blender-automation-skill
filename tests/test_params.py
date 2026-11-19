@@ -74,7 +74,9 @@ class SearchSpaceTests(unittest.TestCase):
     def test_quantize_and_key_are_stable(self) -> None:
         a = {"width": 1.234567891, "height": -0.5}
         b = {"height": -0.5, "width": 1.234567892}
-        self.assertEqual(self.space.key(self.space.quantize(a)), self.space.key(self.space.quantize(b)))
+        self.assertEqual(
+            self.space.key(self.space.quantize(a)), self.space.key(self.space.quantize(b))
+        )
         other = {"width": 1.3, "height": -0.5}
         self.assertNotEqual(
             self.space.key(self.space.quantize(a)),

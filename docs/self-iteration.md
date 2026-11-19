@@ -33,7 +33,7 @@
 
 ```python
 metrics = silhouette_metrics(render_mask, target_mask)
-score = metrics["iou"]                 # 0..1，越大越好
+score = metrics["iou"]  # 0..1，越大越好
 ```
 
 多目标时加权组合，但**权重必须写下来**，并做尺度归一：
@@ -52,11 +52,13 @@ score = 0.6 * iou + 0.3 * (1 - normalized_landmark_error) + 0.1 * symmetry
 ## 3. 参数空间：能搜，也要能解释
 
 ```python
-space = SearchSpace([
-    ParamSpec("width", 0.4, 2.0, default=1.0),
-    ParamSpec("height", 0.3, 1.6, default=1.0),
-    ParamSpec("offset_x", -0.6, 0.6, default=0.0),
-])
+space = SearchSpace(
+    [
+        ParamSpec("width", 0.4, 2.0, default=1.0),
+        ParamSpec("height", 0.3, 1.6, default=1.0),
+        ParamSpec("offset_x", -0.6, 0.6, default=0.0),
+    ]
+)
 ```
 
 - 边界来自物理约束（可打印尺寸、装配间隙），不是"随便给个范围"；
@@ -70,7 +72,7 @@ space = SearchSpace([
 def evaluate(params, workdir) -> Evaluation:
     ...
     return Evaluation(
-        params=params,               # 循环会覆盖成量化后的值
+        params=params,  # 循环会覆盖成量化后的值
         score=score,
         metrics={"iou": ..., "rmse": ...},
         artifacts=[str(png)],

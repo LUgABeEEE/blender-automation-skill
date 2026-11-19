@@ -109,15 +109,19 @@ peak child RSS    454 MB
 ```python
 from model_loop import BlenderConfig, Evaluation, Loop, ParamSpec, SearchSpace, render_report
 
-space = SearchSpace([
-    ParamSpec("width", 0.4, 2.0, default=1.0),
-    ParamSpec("height", 0.3, 1.6, default=1.0),
-])
+space = SearchSpace(
+    [
+        ParamSpec("width", 0.4, 2.0, default=1.0),
+        ParamSpec("height", 0.3, 1.6, default=1.0),
+    ]
+)
+
 
 def evaluate(params, workdir):
     """任意求值：跑一次 Blender、跑一次求解器、或纯函数。"""
     score = (params["width"] - 1.4) ** 2 + (params["height"] - 0.7) ** 2
     return Evaluation(params=params, score=score)
+
 
 loop = Loop(space, evaluate, "out/my-run", budget=60)
 result = loop.run_coordinate_descent(rounds=4)
