@@ -174,6 +174,7 @@ docs/            四篇指南 + 单文件 HTML 导览
 - [机器调优](docs/machine-tuning.md)：基准、内存、串行、超时、失败模式
 - [自迭代闭环](docs/self-iteration.md)：目标函数、参数空间、预算、收敛与复现
 - [MCP 接入](docs/mcp.md)：Claude Code / Codex / Cursor / DSH 的接入配置、6 个工具逐参数说明与常见错误
+- [发布流程](docs/releasing.md)：版本号、打标、PyPI Trusted Publishing 与排错表
 - [HTML 导览](docs/index.html)：一页看完结构、闭环与命令
 - [SKILL.md](SKILL.md)：给 agent 看的调用说明与红线
 
