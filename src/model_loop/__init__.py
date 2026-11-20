@@ -2,7 +2,13 @@
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _distribution_version
+
+try:  # the installed distribution is the single source of truth
+    __version__ = _distribution_version("blender-automation-skill")
+except PackageNotFoundError:  # pragma: no cover - bare source tree, not installed
+    __version__ = "0.1.1"
 
 from .blender import BlenderConfig, BlenderError, RunResult, build_script_argv, run_script
 from .metrics import load_mask, mask_iou, silhouette_metrics
