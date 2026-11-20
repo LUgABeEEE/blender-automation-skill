@@ -14,6 +14,7 @@ Start it with::
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -26,7 +27,7 @@ from .params import ParamError, ParamSpec, SearchSpace
 from .pipeline import Evaluation, Loop, LoopResult
 from .report import render_report
 
-__all__ = ["SERVER_NAME", "build_server", "main", "server_main"]
+__all__ = ["INSTALL_HINT", "SERVER_NAME", "build_server", "main", "server_main"]
 
 SERVER_NAME = "blender-automation-skill"
 
@@ -100,14 +101,23 @@ def _space(specs: dict[str, list[float]] | list[dict[str, Any]]) -> SearchSpace:
     )
 
 
+INSTALL_HINT = (
+    "the MCP server needs the 'mcp' SDK: "
+    'pip install "blender-automation-skill[mcp]" (or ".[mcp]" from a checkout)'
+)
+
+
 def _new_server() -> Any:
     """Build the MCP server, on mcp>=2 (MCPServer) or mcp 1.x (FastMCP)."""
     try:  # mcp >= 2.0
         from mcp.server.mcpserver import MCPServer
 
         return MCPServer(name=SERVER_NAME, instructions=INSTRUCTIONS, version=__version__)
-    except ImportError:  # pragma: no cover - mcp 1.x
-        from mcp.server.fastmcp import FastMCP
+    except ImportError:  # no mcp>=2 module; fall back to 1.x
+        try:
+            from mcp.server.fastmcp import FastMCP
+        except ImportError as exc:  # no mcp at all
+            raise ImportError(INSTALL_HINT) from exc
 
         return FastMCP(SERVER_NAME, instructions=INSTRUCTIONS)
 
@@ -292,7 +302,12 @@ def build_server() -> Any:
 
 
 def server_main() -> None:
-    build_server().run()
+    try:
+        server = build_server()
+    except ImportError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        raise SystemExit(2) from exc
+    server.run()
 
 
 def main() -> None:  # pragma: no cover - process entry point

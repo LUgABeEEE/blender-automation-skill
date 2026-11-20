@@ -179,3 +179,14 @@ def test_optimize_returns_a_structured_error_when_blender_fails(monkeypatch, tmp
     )
     assert payload["ok"] is False
     assert "no blender" in payload["error"]
+
+
+def test_server_main_explains_a_missing_mcp_extra(monkeypatch, capsys):
+    def missing():
+        raise ImportError(mcp_server.INSTALL_HINT)
+
+    monkeypatch.setattr(mcp_server, "_new_server", missing)
+    with pytest.raises(SystemExit) as ctx:
+        mcp_server.server_main()
+    assert ctx.value.code == 2
+    assert "blender-automation-skill[mcp]" in capsys.readouterr().err
