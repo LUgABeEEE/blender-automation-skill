@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "blender-automation-skill"
-version = "0.1.0"
+version = "0.1.1"
 description = "AI Skill + MCP toolkit for agent-driven headless Blender modelling: parameter search, quantified scoring and self-iteration loops"
 readme = "README.md"
 requires-python = ">=3.10"

@@ -219,8 +219,11 @@ codex mcp add blender -- blender-automation-skill-mcp
     <p class="sub">没有 Blender 也能跑测试；跑 demo/bench 才需要真实二进制。<code>model-loop</code> 命令仍是可用别名。</p>
     <div class="two">
       <div>
-<pre><code>python -m pip install -e ".[dev]"
-pytest -q
+<pre><code>pip install "blender-automation-skill[mcp]"
+blender-automation-skill version
+
+# 本地开发（可选）
+python -m pip install -e ".[dev]" && pytest -q
 
 # 机器基准
 blender-automation-skill bench --blender /path/to/blender \
