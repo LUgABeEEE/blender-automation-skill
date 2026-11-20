@@ -1,7 +1,7 @@
-# Release pipeline: tag -> sdist + wheel -> twine check -> PyPI -> GitHub Release.
+# Release pipeline: tag -> sdist + wheel -> twine check -> (PyPI) -> GitHub Release.
 #
-# Publishing uses PyPI Trusted Publishing (OIDC). There is NO API token and no
-# PYPI_API_TOKEN secret anywhere in this workflow; the short-lived identity token
+# Publishing to PyPI uses Trusted Publishing (OIDC): there is NO API token and no
+# PYPI_API_TOKEN secret anywhere in this workflow. The short-lived identity token
 # comes from GitHub, and PyPI verifies it against the publisher configured below.
 #
 # ---- One-time setup, PyPI side (a maintainer does this once) ----------------
@@ -21,6 +21,18 @@
 #   Note: the first publish creates the project on PyPI; after that the pending
 #   publisher becomes a regular trusted publisher automatically.
 #
+# ---- Why the PyPI job is gated ---------------------------------------------
+#   The trusted publisher lives on pypi.org and cannot be created from this
+#   repository, so a tag pushed before that setup would otherwise fail the whole
+#   run and skip the GitHub Release. `publish` therefore only runs when the
+#   repository variable PYPI_PUBLISH is "true":
+#
+#       gh variable set PYPI_PUBLISH --body true
+#       gh workflow run release.yml --ref v0.1.0   # re-run for an existing tag
+#
+#   The GitHub Release job does not depend on PyPI: it always ships the built
+#   distributions and is safe to re-run (it uploads into an existing release).
+#
 # ---- Cutting a release ------------------------------------------------------
 #   1. bump "version" in pyproject.toml (single source of truth) and add a
 #      CHANGELOG entry
@@ -35,6 +47,7 @@ name: release
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -93,6 +106,7 @@ jobs:
   publish:
     name: publish (PyPI trusted publishing)
     needs: build
+    if: vars.PYPI_PUBLISH == 'true'
     runs-on: ubuntu-latest
     environment:
       name: pypi
@@ -112,7 +126,7 @@ jobs:
 
   github-release:
     name: github release (attach artifacts)
-    needs: publish
+    needs: [build]
     runs-on: ubuntu-latest
     permissions:
       contents: write # gh release create needs to write release notes
@@ -122,11 +136,16 @@ jobs:
           name: dist
           path: dist/
 
-      - name: Create the GitHub release with the built distributions
+      - name: Create or update the GitHub release with the built distributions
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "$GITHUB_REF_NAME" dist/* \
-            --repo "$GITHUB_REPOSITORY" \
-            --title "$GITHUB_REF_NAME" \
-            --generate-notes
+          if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "release $GITHUB_REF_NAME already exists; uploading assets"
+            gh release upload "$GITHUB_REF_NAME" dist/* --clobber --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$GITHUB_REF_NAME" dist/* \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "blender-automation-skill $GITHUB_REF_NAME" \
+              --generate-notes
+          fi
