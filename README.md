@@ -4,6 +4,7 @@
 > 参数空间 → 无头渲染 → 量化打分 → 搜索 → 报告，全程脚本化、可复现、可审计。
 
 [![ci](https://github.com/LUgABeEEE/blender-automation-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/LUgABeEEE/blender-automation-skill/actions/workflows/ci.yml)
+[![pypi](https://img.shields.io/pypi/v/blender-automation-skill.svg)](https://pypi.org/project/blender-automation-skill/)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
 [![mcp](https://img.shields.io/badge/MCP-ready-6f42c1.svg)](SKILL.md)
@@ -51,7 +52,8 @@ codex mcp add blender -- blender-automation-skill-mcp
 ## 快速开始（CLI）
 
 ```bash
-python -m pip install -e ".[dev]"
+pip install "blender-automation-skill[mcp]"   # 从 PyPI
+# 或本地开发：python -m pip install -e ".[dev]"
 
 # 1) 看看这台机器跑 Blender 是什么水平
 blender-automation-skill bench --blender /path/to/blender --out out/bench

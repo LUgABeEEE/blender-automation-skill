@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-20
+
+### Changed
+
+- README and the landing page now install from PyPI
+  (`pip install "blender-automation-skill[mcp]"`) instead of pointing at a
+  checkout; the PyPI badge is on the README.
+- `docs/releasing.md` documents the version/tag flow and the PyPI trusted
+  publisher setup.
+
+### Fixed
+
+- `blender-automation-skill-mcp` installed without the `mcp` extra now prints
+  `pip install "blender-automation-skill[mcp]"` and exits 2, instead of raising
+  `ModuleNotFoundError` from inside the server factory.
+
 ## [0.1.0] - 2026-11-20
 
 First public release.
